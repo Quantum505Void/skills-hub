@@ -184,28 +184,44 @@ const SOURCES = {
 
 // Featured GitHub repos to include
 const FEATURED_REPOS = [
-  // Official / Big Tech
-  { repo: 'vercel-labs/agent-skills',             desc: "Vercel's official collection of agent skills." },
+  // ── Official / Big Tech ──────────────────────────────────────────────────
+  { repo: 'anthropics/skills',                    desc: 'Public repository for Agent Skills — official Anthropic skills catalog.' },
+  { repo: 'vercel-labs/agent-skills',             desc: "Vercel's official collection of agent skills for Next.js, v0, and more." },
   { repo: 'openai/skills',                        desc: 'Skills Catalog for Codex — official OpenAI agent skills.' },
   { repo: 'vercel-labs/skills',                   desc: 'The open agent skills tool - npx skills.' },
-  // Awesome lists
+  { repo: 'github/awesome-copilot',               desc: 'Community-contributed instructions, agents, skills, and configurations for GitHub Copilot.' },
+  { repo: 'googleworkspace/cli',                  desc: 'Google Workspace CLI — one command-line tool for Drive, Gmail, Docs, Sheets, and more.' },
+  // ── Awesome collections ──────────────────────────────────────────────────
+  { repo: 'VoltAgent/awesome-openclaw-skills',    desc: 'The awesome collection of OpenClaw skills. 5,400+ skills filtered and curated.' },
   { repo: 'ComposioHQ/awesome-claude-skills',     desc: 'A curated list of awesome Claude Skills, resources, and tools for customizing AI agent behavior.' },
   { repo: 'hesreallyhim/awesome-claude-code',     desc: 'Curated list of awesome skills, hooks, slash-commands, agent orchestration, and more.' },
   { repo: 'sickn33/antigravity-awesome-skills',   desc: 'The Ultimate Collection of 1000+ Agentic Skills for Claude Code/Antigravity/OpenClaw.' },
   { repo: 'VoltAgent/awesome-agent-skills',       desc: 'Claude Code Skills and 500+ agent skills from official dev teams and the community.' },
   { repo: 'travisvn/awesome-claude-skills',       desc: 'A curated list of awesome Claude Skills, resources, and tools for customizing AI.' },
   { repo: 'BehiSecc/awesome-claude-skills',       desc: 'A curated list of Claude Skills covering common workflows and integrations.' },
-  { repo: 'heilcheng/awesome-agent-skills',       desc: 'Curated list of skills, tools, tutorials, and capabilities for AI coding agents.' },
-  // Notable skill packs
+  // ── Large skill packs ────────────────────────────────────────────────────
+  { repo: 'code-yeongyu/oh-my-openagent',         desc: 'oh-my-openagent (omo) — the best agent harness with skill management, previously oh-my-opencode.' },
+  { repo: 'thedotmack/claude-mem',                desc: 'A Claude Code plugin that automatically captures everything and builds persistent memory.' },
+  { repo: 'agentskills/agentskills',              desc: 'Specification and documentation for the Agent Skills open standard (SKILL.md).' },
+  { repo: 'yusufkaraaslan/Skill_Seekers',         desc: 'Convert documentation websites, GitHub repos, and PDFs into reusable agent skills.' },
+  { repo: 'JimLiu/baoyu-skills',                  desc: '包括小红书、微信公众号、漫画生成等中文内容创作 agent skills.' },
+  { repo: 'Jeffallan/claude-skills',              desc: '66 Specialized Skills for Full-Stack Developers — transforms Claude into a senior engineer.' },
+  { repo: 'Orchestra-Research/AI-Research-SKILLs',desc: 'Comprehensive open-source library of AI research and engineering agent skills.' },
+  { repo: 'refly-ai/refly',                       desc: 'The first open-source agent skills builder. Define skills by recording your workflows.' },
+  { repo: 'phuryn/pm-skills',                     desc: 'PM Skills Marketplace: 100+ agentic skills, commands, and plugins for product managers.' },
+  // ── Specialized ──────────────────────────────────────────────────────────
   { repo: 'OthmanAdi/planning-with-files',        desc: 'Claude Code skill implementing Manus-style persistent markdown planning.' },
   { repo: 'K-Dense-AI/claude-scientific-skills',  desc: 'Ready-to-use agent skills for research, science, engineering, and analysis.' },
-  { repo: 'trailofbits/skills',                   desc: 'Trail of Bits Claude Code skills for security research and vulnerability detection.' },
+  { repo: 'trailofbits/skills',                   desc: 'Trail of Bits skills for security research and vulnerability detection.' },
+  { repo: 'arpitg1304/robotics-agent-skills',     desc: 'Agent skills that make AI coding assistants write production-ready robotics code.' },
+  { repo: 'FrancyJGLisboa/agent-skill-creator',   desc: 'Turn any workflow into reusable AI agent skills that install via skills.sh.' },
   { repo: 'kepano/obsidian-skills',               desc: 'Agent skills for Obsidian. Teach your agent to use Markdown, Bases, JSON Canvas, and more.' },
   { repo: 'alirezarezvani/claude-skills',         desc: '+180 production-ready skills & plugins for Claude Code, OpenAI Codex, and OpenClaw.' },
   { repo: 'davepoon/buildwithclaude',             desc: 'A single hub to find Claude Skills, Agents, Commands, Hooks, Plugins, and Marketplace resources.' },
   { repo: 'NevaMind-AI/memU',                     desc: 'Memory for 24/7 proactive agents like OpenClaw (moltbot, claudia).' },
   { repo: 'wshobson/agents',                      desc: 'Production-ready agent skills for Claude Code, OpenClaw, and compatible AI frameworks.' },
   { repo: 'remotion-dev/skills',                  desc: 'Agent Skills for Remotion — create and edit videos with AI agents.' },
+  { repo: 'doanbactam/agent-skills-directory',    desc: 'Browse SKILL.md files for Claude, Cursor, Windsurf and other AI coding assistants.' },
 ];
 
 // skills.sh known skill packs (GitHub search)
@@ -302,10 +318,14 @@ async function loadAwesomeClaude(reset) {
   // Fetch awesome lists + parse them
   const awesomeRepos = [
     // Official
+    'anthropics/skills',
     'vercel-labs/agent-skills',
     'openai/skills',
     'vercel-labs/skills',
-    // Community awesome lists
+    'github/awesome-copilot',
+    'googleworkspace/cli',
+    // Awesome collections
+    'VoltAgent/awesome-openclaw-skills',
     'ComposioHQ/awesome-claude-skills',
     'hesreallyhim/awesome-claude-code',
     'sickn33/antigravity-awesome-skills',
@@ -313,14 +333,26 @@ async function loadAwesomeClaude(reset) {
     'travisvn/awesome-claude-skills',
     'BehiSecc/awesome-claude-skills',
     'heilcheng/awesome-agent-skills',
-    // Notable packs
+    // Skill packs
+    'code-yeongyu/oh-my-openagent',
+    'thedotmack/claude-mem',
+    'agentskills/agentskills',
+    'yusufkaraaslan/Skill_Seekers',
+    'JimLiu/baoyu-skills',
+    'Jeffallan/claude-skills',
+    'Orchestra-Research/AI-Research-SKILLs',
+    'refly-ai/refly',
+    'phuryn/pm-skills',
     'OthmanAdi/planning-with-files',
     'K-Dense-AI/claude-scientific-skills',
     'trailofbits/skills',
-    'remotion-dev/skills',
-    'alirezarezvani/claude-skills',
+    'arpitg1304/robotics-agent-skills',
+    'FrancyJGLisboa/agent-skill-creator',
     'kepano/obsidian-skills',
+    'alirezarezvani/claude-skills',
     'wshobson/agents',
+    'remotion-dev/skills',
+    'doanbactam/agent-skills-directory',
   ];
   const q = state.search.toLowerCase();
   const items = [];
