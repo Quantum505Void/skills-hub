@@ -6,32 +6,15 @@
   <title>Skills Hub — OpenClaw Skills 导航</title>
   <style>
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --border: #2a2d3a;
-      --accent: #6c63ff;
-      --accent2: #00d4aa;
-      --text: #e8e9f0;
-      --muted: #8b8fa8;
-      --tag-bg: #252837;
-      --card-hover: #20233a;
+      --bg: #0f1117; --surface: #1a1d27; --border: #2a2d3a;
+      --accent: #6c63ff; --accent2: #00d4aa;
+      --text: #e8e9f0; --muted: #8b8fa8;
+      --tag-bg: #252837; --card-hover: #20233a;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
-    header {
-      border-bottom: 1px solid var(--border);
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      height: 60px;
-      position: sticky;
-      top: 0;
-      background: rgba(15,17,23,0.95);
-      backdrop-filter: blur(12px);
-      z-index: 100;
-    }
+    header { border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; gap: 12px; height: 60px; position: sticky; top: 0; background: rgba(15,17,23,0.95); backdrop-filter: blur(12px); z-index: 100; }
     .logo { font-size: 18px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
     .search-wrap { flex: 1; max-width: 420px; position: relative; }
     .search-wrap input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px 8px 34px; color: var(--text); font-size: 14px; outline: none; transition: border-color 0.2s; }
@@ -39,10 +22,8 @@
     .search-wrap .si { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); }
     .hdr-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
     .stats-badge { color: var(--muted); font-size: 13px; white-space: nowrap; }
-    .mirror-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; color: var(--muted); font-size: 12px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-    .mirror-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+    .built-at { color: var(--muted); font-size: 11px; white-space: nowrap; }
 
-    /* Source tabs */
     .source-tabs { border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; gap: 4px; overflow-x: auto; background: var(--bg); }
     .source-tabs::-webkit-scrollbar { display: none; }
     .tab-btn { background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); font-size: 13px; padding: 10px 14px; cursor: pointer; white-space: nowrap; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
@@ -50,7 +31,7 @@
     .tab-btn.active { border-bottom-color: var(--accent); color: var(--text); }
     .tab-badge { background: var(--tag-bg); border-radius: 10px; padding: 1px 6px; font-size: 10px; color: var(--muted); }
 
-    .container { max-width: 1280px; margin: 0 auto; padding: 20px 24px; display: grid; grid-template-columns: 200px 1fr; gap: 24px; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 20px 24px; display: grid; grid-template-columns: 180px 1fr; gap: 24px; }
     @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .sidebar { display: none; } }
 
     .sidebar { position: sticky; top: 105px; height: fit-content; }
@@ -65,24 +46,19 @@
     .card:hover { border-color: var(--accent); background: var(--card-hover); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(108,99,255,0.15); }
     .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
     .card-name { font-size: 14px; font-weight: 600; line-height: 1.3; flex: 1; }
-    .card-meta { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .card-meta { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
     .card-star { color: var(--muted); font-size: 11px; }
     .source-pill { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 500; white-space: nowrap; }
-    .src-clawhub { background: rgba(108,99,255,0.15); color: #9d97ff; }
-    .src-github  { background: rgba(0,212,170,0.1);  color: #00d4aa; }
-    .src-awesome { background: rgba(255,140,0,0.12); color: #ffaa44; }
-    .src-skillssh{ background: rgba(255,80,120,0.12); color: #ff7fa8; }
+    .src-clawhub  { background: rgba(108,99,255,0.15); color: #9d97ff; }
+    .src-github   { background: rgba(0,212,170,0.1);   color: #00d4aa; }
+    .src-awesome  { background: rgba(255,140,0,0.12);  color: #ffaa44; }
+    .src-skillssh { background: rgba(255,80,120,0.12); color: #ff7fa8; }
     .card-summary { font-size: 12px; color: var(--muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .card-footer { display: flex; align-items: center; gap: 8px; margin-top: auto; flex-wrap: wrap; }
-    .card-slug { font-size: 11px; color: var(--accent2); font-family: monospace; background: rgba(0,212,170,0.08); padding: 2px 7px; border-radius: 4px; }
+    .card-slug { font-size: 11px; color: var(--accent2); font-family: monospace; background: rgba(0,212,170,0.08); padding: 2px 7px; border-radius: 4px; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .card-dl { margin-left: auto; font-size: 11px; color: var(--muted); }
 
-    .loading { grid-column: 1/-1; text-align: center; color: var(--muted); padding: 60px; font-size: 14px; }
-    .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .load-more { grid-column: 1/-1; text-align: center; padding: 16px; }
-    .load-more button { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 10px 28px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
-    .load-more button:hover { border-color: var(--accent); color: var(--accent); }
+    .no-results { grid-column: 1/-1; text-align: center; color: var(--muted); padding: 60px; font-size: 14px; }
 
     /* Modal */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
@@ -90,9 +66,9 @@
     .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; max-width: 560px; width: 100%; max-height: 82vh; overflow-y: auto; padding: 28px; position: relative; }
     .modal-close { position: absolute; top: 16px; right: 16px; background: var(--tag-bg); border: none; color: var(--muted); width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; }
     .modal-close:hover { color: var(--text); }
-    .modal h2 { font-size: 18px; margin-bottom: 6px; }
+    .modal h2 { font-size: 18px; margin-bottom: 6px; padding-right: 36px; }
     .modal .slug { font-size: 12px; color: var(--accent2); font-family: monospace; margin-bottom: 14px; }
-    .modal .desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; white-space: pre-wrap; }
+    .modal .desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
     .modal .meta-row { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
     .modal .meta-item { font-size: 12px; color: var(--muted); }
     .modal .meta-item strong { color: var(--text); font-size: 14px; display: block; }
@@ -115,401 +91,142 @@
     <input type="text" id="search" placeholder="搜索 skill 名称、描述…" autocomplete="off" />
   </div>
   <div class="hdr-right">
-    <span class="stats-badge" id="statsText">加载中…</span>
-    <button class="mirror-btn" onclick="copyMirror()">📋 镜像地址</button>
+    <span class="stats-badge" id="statsText"></span>
+    <span class="built-at" id="builtAt"></span>
   </div>
 </header>
 
-<!-- Source tabs -->
 <div class="source-tabs" id="sourceTabs">
-  <button class="tab-btn active" data-src="clawhub">☁️ ClawHub <span class="tab-badge" id="cnt-clawhub">…</span></button>
-  <button class="tab-btn" data-src="awesome-claude">🌟 Awesome Claude <span class="tab-badge" id="cnt-awesome-claude">…</span></button>
-  <button class="tab-btn" data-src="skillssh">🛠 skills.sh <span class="tab-badge" id="cnt-skillssh">…</span></button>
-  <button class="tab-btn" data-src="github-repos">🐙 GitHub Repos <span class="tab-badge" id="cnt-github-repos">…</span></button>
+  <button class="tab-btn active" data-src="clawhub">☁️ ClawHub <span class="tab-badge" id="cnt-clawhub"></span></button>
+  <button class="tab-btn" data-src="github">🐙 GitHub Repos <span class="tab-badge" id="cnt-github"></span></button>
+  <button class="tab-btn" data-src="skillssh">🛠 skills.sh <span class="tab-badge" id="cnt-skillssh"></span></button>
 </div>
 
 <div class="container">
   <aside class="sidebar">
     <h3>排序</h3>
     <ul class="sort-list" id="sortList">
-      <li><button class="active" data-sort="updatedAt">最近更新</button></li>
-      <li><button data-sort="downloads">下载最多</button></li>
+      <li><button class="active" data-sort="default">默认</button></li>
       <li><button data-sort="stars">星标最多</button></li>
-      <li><button data-sort="createdAt">最新发布</button></li>
+      <li><button data-sort="downloads">下载最多</button></li>
+      <li><button data-sort="name">名称 A-Z</button></li>
     </ul>
   </aside>
   <main>
-    <div class="grid" id="grid">
-      <div class="loading"><div class="spinner"></div><div>正在加载…</div></div>
-    </div>
+    <div class="grid" id="grid"></div>
   </main>
 </div>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal" id="modal">
+  <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div id="modalContent"></div>
   </div>
 </div>
 
 <script>
+/* STATIC_DATA_START */
+const STATIC_DATA = {};
+/* STATIC_DATA_END */
+
 const PROXY = 'https://xiaoxin-clawhub-mirror.moke521-wang.workers.dev';
-const GITHUB_API = 'https://api.github.com';
-const PAGE_SIZE = 48;
 
-// ─── Data sources ────────────────────────────────────────────────────────────
-
-const SOURCES = {
-  'clawhub': {
-    label: 'ClawHub',
-    pill: 'src-clawhub',
-    load: loadClawhub,
-  },
-  'awesome-claude': {
-    label: 'Awesome Claude',
-    pill: 'src-awesome',
-    load: loadAwesomeClaude,
-  },
-  'skillssh': {
-    label: 'skills.sh',
-    pill: 'src-skillssh',
-    load: loadSkillsSh,
-  },
-  'github-repos': {
-    label: 'GitHub Repos',
-    pill: 'src-github',
-    load: loadGithubRepos,
-  },
-};
-
-// Featured GitHub repos to include
-const FEATURED_REPOS = [
-  // ── Official / Big Tech ──────────────────────────────────────────────────
-  { repo: 'anthropics/skills',                    desc: 'Public repository for Agent Skills — official Anthropic skills catalog.' },
-  { repo: 'vercel-labs/agent-skills',             desc: "Vercel's official collection of agent skills for Next.js, v0, and more." },
-  { repo: 'openai/skills',                        desc: 'Skills Catalog for Codex — official OpenAI agent skills.' },
-  { repo: 'vercel-labs/skills',                   desc: 'The open agent skills tool - npx skills.' },
-  { repo: 'github/awesome-copilot',               desc: 'Community-contributed instructions, agents, skills, and configurations for GitHub Copilot.' },
-  { repo: 'googleworkspace/cli',                  desc: 'Google Workspace CLI — one command-line tool for Drive, Gmail, Docs, Sheets, and more.' },
-  // ── Awesome collections ──────────────────────────────────────────────────
-  { repo: 'VoltAgent/awesome-openclaw-skills',    desc: 'The awesome collection of OpenClaw skills. 5,400+ skills filtered and curated.' },
-  { repo: 'ComposioHQ/awesome-claude-skills',     desc: 'A curated list of awesome Claude Skills, resources, and tools for customizing AI agent behavior.' },
-  { repo: 'hesreallyhim/awesome-claude-code',     desc: 'Curated list of awesome skills, hooks, slash-commands, agent orchestration, and more.' },
-  { repo: 'sickn33/antigravity-awesome-skills',   desc: 'The Ultimate Collection of 1000+ Agentic Skills for Claude Code/Antigravity/OpenClaw.' },
-  { repo: 'VoltAgent/awesome-agent-skills',       desc: 'Claude Code Skills and 500+ agent skills from official dev teams and the community.' },
-  { repo: 'travisvn/awesome-claude-skills',       desc: 'A curated list of awesome Claude Skills, resources, and tools for customizing AI.' },
-  { repo: 'BehiSecc/awesome-claude-skills',       desc: 'A curated list of Claude Skills covering common workflows and integrations.' },
-  // ── Large skill packs ────────────────────────────────────────────────────
-  { repo: 'code-yeongyu/oh-my-openagent',         desc: 'oh-my-openagent (omo) — the best agent harness with skill management, previously oh-my-opencode.' },
-  { repo: 'thedotmack/claude-mem',                desc: 'A Claude Code plugin that automatically captures everything and builds persistent memory.' },
-  { repo: 'agentskills/agentskills',              desc: 'Specification and documentation for the Agent Skills open standard (SKILL.md).' },
-  { repo: 'yusufkaraaslan/Skill_Seekers',         desc: 'Convert documentation websites, GitHub repos, and PDFs into reusable agent skills.' },
-  { repo: 'JimLiu/baoyu-skills',                  desc: '包括小红书、微信公众号、漫画生成等中文内容创作 agent skills.' },
-  { repo: 'Jeffallan/claude-skills',              desc: '66 Specialized Skills for Full-Stack Developers — transforms Claude into a senior engineer.' },
-  { repo: 'Orchestra-Research/AI-Research-SKILLs',desc: 'Comprehensive open-source library of AI research and engineering agent skills.' },
-  { repo: 'refly-ai/refly',                       desc: 'The first open-source agent skills builder. Define skills by recording your workflows.' },
-  { repo: 'phuryn/pm-skills',                     desc: 'PM Skills Marketplace: 100+ agentic skills, commands, and plugins for product managers.' },
-  // ── Specialized ──────────────────────────────────────────────────────────
-  { repo: 'OthmanAdi/planning-with-files',        desc: 'Claude Code skill implementing Manus-style persistent markdown planning.' },
-  { repo: 'K-Dense-AI/claude-scientific-skills',  desc: 'Ready-to-use agent skills for research, science, engineering, and analysis.' },
-  { repo: 'trailofbits/skills',                   desc: 'Trail of Bits skills for security research and vulnerability detection.' },
-  { repo: 'arpitg1304/robotics-agent-skills',     desc: 'Agent skills that make AI coding assistants write production-ready robotics code.' },
-  { repo: 'FrancyJGLisboa/agent-skill-creator',   desc: 'Turn any workflow into reusable AI agent skills that install via skills.sh.' },
-  { repo: 'kepano/obsidian-skills',               desc: 'Agent skills for Obsidian. Teach your agent to use Markdown, Bases, JSON Canvas, and more.' },
-  { repo: 'alirezarezvani/claude-skills',         desc: '+180 production-ready skills & plugins for Claude Code, OpenAI Codex, and OpenClaw.' },
-  { repo: 'davepoon/buildwithclaude',             desc: 'A single hub to find Claude Skills, Agents, Commands, Hooks, Plugins, and Marketplace resources.' },
-  { repo: 'NevaMind-AI/memU',                     desc: 'Memory for 24/7 proactive agents like OpenClaw (moltbot, claudia).' },
-  { repo: 'wshobson/agents',                      desc: 'Production-ready agent skills for Claude Code, OpenClaw, and compatible AI frameworks.' },
-  { repo: 'remotion-dev/skills',                  desc: 'Agent Skills for Remotion — create and edit videos with AI agents.' },
-  { repo: 'doanbactam/agent-skills-directory',    desc: 'Browse SKILL.md files for Claude, Cursor, Windsurf and other AI coding assistants.' },
-];
-
-// skills.sh known skill packs (GitHub search)
-const SKILLSSH_REPOS = [
-  'wshobson/agents',
-  'anthropics/claude-code-skills',
-  'alirezarezvani/claude-skills',
-  'kepano/obsidian-skills',
-];
-
-// ─── State ───────────────────────────────────────────────────────────────────
-let state = {
-  src: 'clawhub',
-  items: [],
-  cursor: null,
-  hasMore: true,
-  loading: false,
-  sort: 'updatedAt',
-  search: '',
-};
-let cache = {};
+let curSrc = 'clawhub';
+let curSort = 'default';
+let search = '';
 let searchTimer = null;
 
-// ─── Loaders ─────────────────────────────────────────────────────────────────
+const srcMeta = {
+  clawhub:  { pill: 'src-clawhub',  label: 'ClawHub' },
+  github:   { pill: 'src-github',   label: 'GitHub'  },
+  awesome:  { pill: 'src-awesome',  label: 'Awesome' },
+  skillssh: { pill: 'src-skillssh', label: 'skills.sh' },
+};
 
-async function loadClawhub(reset) {
-  if (reset) state.cursor = null;
-  let url = `${PROXY}/api/v1/skills?limit=${PAGE_SIZE}&orderBy=${state.sort}`;
-  if (state.cursor) url += `&cursor=${encodeURIComponent(state.cursor)}`;
-  if (state.search) url += `&search=${encodeURIComponent(state.search)}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  const items = (data.items || []).map(s => ({
-    id: s.slug,
-    name: s.displayName || s.slug,
-    slug: s.slug,
-    desc: s.summary || '',
-    stars: s.stats?.stars || 0,
-    downloads: s.stats?.downloads || 0,
-    version: s.latestVersion?.version || '',
-    source: 'clawhub',
-    install: `CLAWHUB_REGISTRY=${PROXY} clawhub install ${s.slug}`,
-    installOfficial: `clawhub install ${s.slug}`,
-    url: `https://clawhub.ai/skills/${s.slug}`,
-  }));
-  state.cursor = data.nextCursor || null;
-  state.hasMore = !!state.cursor;
-  document.getElementById('cnt-clawhub').textContent = reset ? items.length + (state.hasMore?'+':'') : '';
+function init() {
+  // update tab counts
+  document.getElementById('cnt-clawhub').textContent  = (STATIC_DATA.clawhub  || []).length;
+  document.getElementById('cnt-github').textContent   = (STATIC_DATA.github   || []).length;
+  document.getElementById('cnt-skillssh').textContent = (STATIC_DATA.skillssh || []).length;
+
+  if (STATIC_DATA.builtAt) {
+    const d = new Date(STATIC_DATA.builtAt);
+    document.getElementById('builtAt').textContent =
+      `数据更新: ${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+  render();
+}
+
+function getItems() {
+  const raw = STATIC_DATA[curSrc] || [];
+  const q = search.toLowerCase();
+  let items = q
+    ? raw.filter(s => s.name.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q) || s.slug.toLowerCase().includes(q))
+    : raw.slice();
+
+  if (curSort === 'stars')     items.sort((a,b) => b.stars - a.stars);
+  else if (curSort === 'downloads') items.sort((a,b) => b.downloads - a.downloads);
+  else if (curSort === 'name') items.sort((a,b) => a.name.localeCompare(b.name));
   return items;
-}
-
-async function loadGithubRepo(full_name) {
-  const cacheKey = 'repo:' + full_name;
-  if (cache[cacheKey]) return cache[cacheKey];
-  const r = await fetch(`${GITHUB_API}/repos/${full_name}`);
-  const d = await r.json();
-  cache[cacheKey] = d;
-  return d;
-}
-
-async function loadGithubRepos(reset) {
-  if (!reset && !state.hasMore) return [];
-  state.hasMore = false;
-  const q = state.search.toLowerCase();
-  const items = [];
-  for (const { repo, desc } of FEATURED_REPOS) {
-    let info;
-    try { info = await loadGithubRepo(repo); } catch(e) { continue; }
-    const name = info.name || repo.split('/')[1];
-    const fullDesc = info.description || desc;
-    if (q && !name.toLowerCase().includes(q) && !fullDesc.toLowerCase().includes(q)) continue;
-    items.push({
-      id: repo,
-      name: info.full_name || repo,
-      slug: repo,
-      desc: fullDesc,
-      stars: info.stargazers_count || 0,
-      downloads: 0,
-      version: '',
-      source: 'github',
-      install: `git clone https://github.com/${repo}`,
-      installOfficial: `git clone https://github.com/${repo}`,
-      url: info.html_url || `https://github.com/${repo}`,
-    });
-  }
-  items.sort((a,b) => b.stars - a.stars);
-  document.getElementById('cnt-github-repos').textContent = items.length;
-  return items;
-}
-
-async function loadAwesomeClaude(reset) {
-  if (!reset && !state.hasMore) return [];
-  state.hasMore = false;
-  // Fetch awesome lists + parse them
-  const awesomeRepos = [
-    // Official
-    'anthropics/skills',
-    'vercel-labs/agent-skills',
-    'openai/skills',
-    'vercel-labs/skills',
-    'github/awesome-copilot',
-    'googleworkspace/cli',
-    // Awesome collections
-    'VoltAgent/awesome-openclaw-skills',
-    'ComposioHQ/awesome-claude-skills',
-    'hesreallyhim/awesome-claude-code',
-    'sickn33/antigravity-awesome-skills',
-    'VoltAgent/awesome-agent-skills',
-    'travisvn/awesome-claude-skills',
-    'BehiSecc/awesome-claude-skills',
-    'heilcheng/awesome-agent-skills',
-    // Skill packs
-    'code-yeongyu/oh-my-openagent',
-    'thedotmack/claude-mem',
-    'agentskills/agentskills',
-    'yusufkaraaslan/Skill_Seekers',
-    'JimLiu/baoyu-skills',
-    'Jeffallan/claude-skills',
-    'Orchestra-Research/AI-Research-SKILLs',
-    'refly-ai/refly',
-    'phuryn/pm-skills',
-    'OthmanAdi/planning-with-files',
-    'K-Dense-AI/claude-scientific-skills',
-    'trailofbits/skills',
-    'arpitg1304/robotics-agent-skills',
-    'FrancyJGLisboa/agent-skill-creator',
-    'kepano/obsidian-skills',
-    'alirezarezvani/claude-skills',
-    'wshobson/agents',
-    'remotion-dev/skills',
-    'doanbactam/agent-skills-directory',
-  ];
-  const q = state.search.toLowerCase();
-  const items = [];
-  for (const repo of awesomeRepos) {
-    let info;
-    try { info = await loadGithubRepo(repo); } catch(e) { continue; }
-    const fullDesc = info.description || '';
-    if (q && !info.name.toLowerCase().includes(q) && !fullDesc.toLowerCase().includes(q)) continue;
-    items.push({
-      id: 'awesome:' + repo,
-      name: '★ ' + (info.full_name || repo),
-      slug: repo,
-      desc: fullDesc,
-      stars: info.stargazers_count || 0,
-      downloads: 0,
-      version: '',
-      source: 'awesome',
-      install: `# Browse at:\n${info.html_url}`,
-      installOfficial: `# Browse at:\n${info.html_url}`,
-      url: info.html_url || `https://github.com/${repo}`,
-      isAwesome: true,
-    });
-  }
-  items.sort((a,b) => b.stars - a.stars);
-  document.getElementById('cnt-awesome-claude').textContent = items.length;
-  return items;
-}
-
-async function loadSkillsSh(reset) {
-  if (!reset && !state.hasMore) return [];
-  state.hasMore = false;
-  // Search GitHub for skills.sh compatible repos
-  const cacheKey = 'skillssh:' + state.search;
-  if (!reset && cache[cacheKey]) {
-    return cache[cacheKey];
-  }
-  const q = state.search ? `+${encodeURIComponent(state.search)}` : '';
-  const url = `${GITHUB_API}/search/repositories?q=skills.sh+agent+skills${q}&sort=stars&per_page=30`;
-  const res = await fetch(url);
-  const data = await res.json();
-  const items = (data.items || []).map(r => ({
-    id: 'gh:' + r.full_name,
-    name: r.full_name,
-    slug: r.full_name,
-    desc: r.description || '',
-    stars: r.stargazers_count || 0,
-    downloads: 0,
-    version: '',
-    source: 'skillssh',
-    install: `npx skills add ${r.full_name.split('/')[0]}/${r.name}@latest --yes`,
-    installOfficial: `npx skills add ${r.full_name.split('/')[0]}/${r.name}@latest --yes`,
-    url: r.html_url,
-  }));
-  cache[cacheKey] = items;
-  document.getElementById('cnt-skillssh').textContent = items.length + '+';
-  return items;
-}
-
-// ─── Render ───────────────────────────────────────────────────────────────────
-
-async function load(reset = false) {
-  if (state.loading || (!state.hasMore && !reset)) return;
-  state.loading = true;
-  if (reset) {
-    state.items = [];
-    state.hasMore = true;
-    document.getElementById('grid').innerHTML =
-      `<div class="loading"><div class="spinner"></div><div>正在加载…</div></div>`;
-  }
-  try {
-    const newItems = await SOURCES[state.src].load(reset);
-    state.items = reset ? newItems : [...state.items, ...newItems];
-    render();
-  } catch(e) {
-    document.getElementById('grid').innerHTML =
-      `<div class="loading" style="color:#ff6b6b">加载失败，请刷新<br><small>${e.message}</small></div>`;
-  }
-  state.loading = false;
 }
 
 function render() {
+  const items = getItems();
   const grid = document.getElementById('grid');
-  if (!state.items.length) {
-    grid.innerHTML = `<div class="loading">没有找到相关 skill</div>`;
+  document.getElementById('statsText').textContent = `${items.length} skills`;
+
+  if (!items.length) {
+    grid.innerHTML = `<div class="no-results">没有找到相关 skill</div>`;
     return;
   }
-  const pills = { clawhub:'src-clawhub', github:'src-github', awesome:'src-awesome', skillssh:'src-skillssh' };
-  const cards = state.items.map(s => {
-    const pill = pills[s.source] || 'src-github';
-    const srcLabel = { clawhub:'ClawHub', github:'GitHub', awesome:'Awesome', skillssh:'skills.sh' }[s.source] || 'GitHub';
+
+  grid.innerHTML = items.map(s => {
+    const m = srcMeta[s.source] || srcMeta.github;
     return `<div class="card" onclick='showDetail(${JSON.stringify(s).replace(/'/g,"&#39;")})'>
       <div class="card-head">
         <div class="card-name">${esc(s.name)}</div>
         <div class="card-meta">
-          ${s.stars > 0 ? `<span class="card-star">⭐ ${fmtNum(s.stars)}</span>` : ''}
-          <span class="source-pill ${pill}">${srcLabel}</span>
+          ${s.stars > 0 ? `<span class="card-star">⭐ ${fmt(s.stars)}</span>` : ''}
+          <span class="source-pill ${m.pill}">${m.label}</span>
         </div>
       </div>
       <div class="card-summary">${esc(s.desc)}</div>
       <div class="card-footer">
-        <span class="card-slug">${esc(s.slug.length > 32 ? s.slug.slice(0,32)+'…' : s.slug)}</span>
-        ${s.downloads > 0 ? `<span class="card-dl">↓ ${fmtNum(s.downloads)}</span>` : ''}
+        <span class="card-slug" title="${esc(s.slug)}">${esc(s.slug)}</span>
+        ${s.downloads > 0 ? `<span class="card-dl">↓ ${fmt(s.downloads)}</span>` : ''}
       </div>
     </div>`;
   }).join('');
-
-  const more = state.hasMore
-    ? `<div class="load-more"><button onclick="load()">加载更多</button></div>`
-    : '';
-
-  grid.innerHTML = cards + more;
-  document.getElementById('statsText').textContent = `${state.items.length}${state.hasMore?'+':''} skills`;
 }
 
 function showDetail(s) {
-  const pills = { clawhub:'src-clawhub', github:'src-github', awesome:'src-awesome', skillssh:'src-skillssh' };
-  const pill = pills[s.source] || 'src-github';
-  const srcLabel = { clawhub:'ClawHub', github:'GitHub', awesome:'Awesome List', skillssh:'skills.sh' }[s.source] || s.source;
-
+  const m = srcMeta[s.source] || srcMeta.github;
   let cmds = '';
   if (s.source === 'clawhub') {
     cmds = `
-      <div class="cmd-block">
-        <div class="cmd-label">官方源安装</div>
-        <div class="cmd-text">${esc(s.installOfficial)}</div>
-      </div>
-      <div class="cmd-block">
-        <div class="cmd-label">镜像源安装（国内加速）</div>
-        <div class="cmd-text">${esc(s.install)}</div>
-      </div>
-      <button class="copy-btn" id="mainCopyBtn" onclick="copyText('${esc(s.install)}', this)">📋 复制镜像安装命令</button>`;
+      <div class="cmd-block"><div class="cmd-label">官方源安装</div><div class="cmd-text">${esc(s.installOfficial)}</div></div>
+      <div class="cmd-block"><div class="cmd-label">镜像安装（国内加速）</div><div class="cmd-text">${esc(s.install)}</div></div>
+      <button class="copy-btn" onclick="copyText('${esc(s.install)}', this)">📋 复制镜像安装命令</button>`;
   } else if (s.source === 'skillssh') {
     cmds = `
-      <div class="cmd-block">
-        <div class="cmd-label">skills.sh 安装</div>
-        <div class="cmd-text">${esc(s.install)}</div>
-      </div>
-      <button class="copy-btn" id="mainCopyBtn" onclick="copyText('${esc(s.install)}', this)">📋 复制安装命令</button>`;
+      <div class="cmd-block"><div class="cmd-label">skills.sh 安装</div><div class="cmd-text">${esc(s.install)}</div></div>
+      <button class="copy-btn" onclick="copyText('${esc(s.install)}', this)">📋 复制安装命令</button>`;
   } else {
     cmds = `
-      <div class="cmd-block">
-        <div class="cmd-label">克隆仓库</div>
-        <div class="cmd-text">${esc(s.install)}</div>
-      </div>
-      <button class="copy-btn" id="mainCopyBtn" onclick="copyText('${esc(s.url)}', this)">📋 复制仓库链接</button>`;
+      <div class="cmd-block"><div class="cmd-label">克隆仓库</div><div class="cmd-text">${esc(s.install)}</div></div>
+      <button class="copy-btn" onclick="copyText('${esc(s.url)}', this)">📋 复制仓库链接</button>`;
   }
 
   document.getElementById('modalContent').innerHTML = `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
       <h2 style="flex:1">${esc(s.name)}</h2>
-      <span class="source-pill ${pill}">${srcLabel}</span>
+      <span class="source-pill ${m.pill}">${m.label}</span>
     </div>
     <div class="slug">${esc(s.slug)}</div>
     <div class="desc">${esc(s.desc)}</div>
     <div class="meta-row">
-      ${s.stars > 0 ? `<div class="meta-item"><strong>⭐ ${fmtNum(s.stars)}</strong>星标</div>` : ''}
-      ${s.downloads > 0 ? `<div class="meta-item"><strong>↓ ${fmtNum(s.downloads)}</strong>下载</div>` : ''}
+      ${s.stars > 0 ? `<div class="meta-item"><strong>⭐ ${fmt(s.stars)}</strong>星标</div>` : ''}
+      ${s.downloads > 0 ? `<div class="meta-item"><strong>↓ ${fmt(s.downloads)}</strong>下载</div>` : ''}
       ${s.version ? `<div class="meta-item"><strong>${esc(s.version)}</strong>版本</div>` : ''}
     </div>
     ${cmds}
@@ -531,57 +248,36 @@ async function copyText(text, btn) {
   setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
 }
 
-async function copyMirror() {
-  await navigator.clipboard.writeText(PROXY);
-  const btn = document.querySelector('.mirror-btn');
-  const orig = btn.textContent;
-  btn.textContent = '✅ 已复制';
-  setTimeout(() => btn.textContent = orig, 2000);
-}
-
-function fmtNum(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n); }
+function fmt(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n); }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ─── Event listeners ─────────────────────────────────────────────────────────
 document.getElementById('search').addEventListener('input', e => {
-  state.search = e.target.value.trim();
+  search = e.target.value.trim();
   clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => load(true), 350);
+  searchTimer = setTimeout(render, 200);
 });
 
 document.getElementById('sourceTabs').addEventListener('click', e => {
   const btn = e.target.closest('[data-src]');
   if (!btn) return;
-  state.src = btn.dataset.src;
-  state.sort = 'updatedAt';
+  curSrc = btn.dataset.src;
   document.querySelectorAll('[data-src]').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  // Reset sort UI
-  document.querySelectorAll('.sort-list button').forEach(b => b.classList.remove('active'));
-  document.querySelector('.sort-list button[data-sort="updatedAt"]').classList.add('active');
-  load(true);
+  render();
 });
 
 document.getElementById('sortList').addEventListener('click', e => {
   const btn = e.target.closest('button[data-sort]');
   if (!btn) return;
-  state.sort = btn.dataset.sort;
+  curSort = btn.dataset.sort;
   document.querySelectorAll('.sort-list button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  load(true);
+  render();
 });
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
-load(true);
-// Pre-load other tab counts in background
-setTimeout(() => {
-  ['awesome-claude','skillssh','github-repos'].forEach(src => {
-    const origSrc = state.src;
-    SOURCES[src].load(true).catch(()=>{});
-  });
-}, 1000);
+init();
 </script>
 </body>
 </html>
