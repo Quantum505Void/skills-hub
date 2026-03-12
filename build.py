@@ -260,7 +260,7 @@ with open('index.html', 'r') as f:
 # Use application/json tag to avoid any JS syntax issues with embedded data
 # json.dumps handles all control chars (\n, \r, \t etc), and </script> inside
 # a type="application/json" block is safe (browser won't execute it).
-json_str = json.dumps(payload, ensure_ascii=False)
+json_str = json.dumps(payload, ensure_ascii=True)
 
 sd_start = '<!-- STATIC_DATA_START -->'
 sd_end = '<!-- STATIC_DATA_END -->'
@@ -269,7 +269,7 @@ new_block = f'{sd_start}\n<script type="application/json" id="sd">{json_str}</sc
 if sd_start in html:
     html = re.sub(
         re.escape(sd_start) + r'.*?' + re.escape(sd_end),
-        new_block, html, flags=re.DOTALL
+        lambda m: new_block, html, flags=re.DOTALL
     )
 else:
     # fallback: replace old marker style
