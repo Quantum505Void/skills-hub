@@ -261,20 +261,32 @@ payload = {
 with open('index.html', 'r') as f:
     html = f.read()
 
-# Escape </script> to prevent HTML parser from closing the script tag early
-json_str = json.dumps(payload, ensure_ascii=False).replace('</script>', '<\\/script>').replace('<!--', '<\\!--')
+# Use application/json tag to avoid any JS syntax issues with embedded data
+# json.dumps handles all control chars (\n, \r, \t etc), and </script> inside
+# a type="application/json" block is safe (browser won't execute it).
+json_str = json.dumps(payload, ensure_ascii=False)
 
-marker_start = '/* STATIC_DATA_START */'
-marker_end = '/* STATIC_DATA_END */'
-new_block = f'{marker_start}\nconst STATIC_DATA = {json_str};\n{marker_end}'
+sd_start = '<!-- STATIC_DATA_START -->'
+sd_end = '<!-- STATIC_DATA_END -->'
+new_block = f'{sd_start}\n<script type="application/json" id="sd">{json_str}</script>\n{sd_end}'
 
-if marker_start in html:
+if sd_start in html:
     html = re.sub(
-        re.escape(marker_start) + r'.*?' + re.escape(marker_end),
+        re.escape(sd_start) + r'.*?' + re.escape(sd_end),
         new_block, html, flags=re.DOTALL
     )
 else:
-    html = html.replace('<script>', '<script>\n' + new_block + '\n', 1)
+    # fallback: replace old marker style
+    marker_start = '/* STATIC_DATA_START */'
+    marker_end = '/* STATIC_DATA_END */'
+    old_script_block = re.search(
+        r'<script>\s*' + re.escape(marker_start) + r'.*?' + re.escape(marker_end) + r'\s*',
+        html, flags=re.DOTALL
+    )
+    if old_script_block:
+        html = html[:old_script_block.start()] + new_block + '\n' + html[old_script_block.end():]
+    else:
+        html = html.replace('</head>', new_block + '\n</head>', 1)
 
 with open('index.html', 'w') as f:
     f.write(html)
