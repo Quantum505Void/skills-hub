@@ -3,10 +3,40 @@
 Build script: pre-fetch all data and inject into index.html as static JSON.
 Run by GitHub Actions on every push to main.
 """
-import json, time, urllib.request, urllib.error, os, re, sys
+import json, time, urllib.request, urllib.error, urllib.parse, os, re, sys
 
 PROXY = 'https://xiaoxin-clawhub-mirror.moke521-wang.workers.dev'
 GH_TOKEN = os.environ.get('GH_TOKEN', '')
+
+# Category keyword rules
+CATEGORY_RULES = [
+    ('🤖 AI/ML',   ['ai-', 'llm', 'rag', 'embedding', 'vector', 'model', 'inference', 'openai', 'claude', 'gemini',
+                    'gpt', 'stable-diffusion', 'diffusion', 'machine-learning', 'deep-learning', 'neural',
+                    'ai_', ' ai ', 'artificial']),
+    ('🎨 前端',    ['vue', 'react', 'next', 'tailwind', 'css', 'electron', 'shadcn', 'accessibility',
+                    'frontend', 'svelte', 'angular', 'nuxt', 'vite', 'webpack', 'html', 'ui-component']),
+    ('🐍 Python',  ['python', 'fastapi', 'django', 'flask', 'pandas', 'pytest', 'uv-python', 'pip']),
+    ('⚙️ 后端',    ['node', '-api', 'rest', 'graphql', 'database', 'redis', 'postgres', 'mongodb',
+                    'backend', 'server', 'express', 'nestjs', 'prisma', 'drizzle', 'supabase', 'firebase',
+                    'mysql', 'sqlite', 'orm']),
+    ('🚀 DevOps',  ['docker', 'k8s', 'kubernetes', 'terraform', 'github-action', 'ci-', 'deploy', 'monitoring',
+                    'prometheus', 'grafana', 'ansible', 'helm', 'devops', 'pipeline', 'gitops']),
+    ('🔒 安全',    ['security', 'auth', 'jwt', 'crypto', 'pentest', 'audit', 'reverse', 'oauth', 'ssl', 'tls',
+                    'vulnerability', 'exploit', 'penetration']),
+    ('📝 内容创作', ['blog', 'seo', 'writing', 'content', 'social', 'marketing', 'copywriting', 'newsletter',
+                    'podcast', 'video', 'youtube', 'twitter', 'instagram', 'tiktok', 'xiaohongshu', 'baoyu']),
+    ('🛠 工具',    ['git', 'shell', 'tmux', 'vim', 'productivity', 'cli', 'terminal', 'bash', 'zsh',
+                    'obsidian', 'notion', 'jira', 'github', 'workflow', 'automation']),
+]
+
+def categorize(name, desc):
+    text = (name + ' ' + desc).lower()
+    for cat, keywords in CATEGORY_RULES:
+        for kw in keywords:
+            if kw in text:
+                return cat
+    return '📦 其他'
+
 
 def fetch(url, retries=3):
     headers = {'User-Agent': 'skills-hub-builder/1.0'}
@@ -27,7 +57,7 @@ def fetch_clawhub():
     items = []
     cursor = None
     page = 0
-    while page < 10:  # max 10 pages = 480 skills
+    while page < 10:
         url = f'{PROXY}/api/v1/skills?limit=48&orderBy=updatedAt'
         if cursor:
             url += f'&cursor={urllib.parse.quote(cursor)}'
@@ -36,11 +66,13 @@ def fetch_clawhub():
             break
         batch = data.get('items', [])
         for s in batch:
+            name = s.get('displayName') or s['slug']
+            desc = s.get('summary') or ''
             items.append({
                 'id': s['slug'],
-                'name': s.get('displayName') or s['slug'],
+                'name': name,
                 'slug': s['slug'],
-                'desc': s.get('summary') or '',
+                'desc': desc,
                 'stars': s.get('stats', {}).get('stars', 0),
                 'downloads': s.get('stats', {}).get('downloads', 0),
                 'version': (s.get('latestVersion') or {}).get('version', ''),
@@ -48,6 +80,7 @@ def fetch_clawhub():
                 'install': f'CLAWHUB_REGISTRY={PROXY} clawhub install {s["slug"]}',
                 'installOfficial': f'clawhub install {s["slug"]}',
                 'url': f'https://clawhub.ai/skills/{s["slug"]}',
+                'category': categorize(s['slug'], desc),
             })
         cursor = data.get('nextCursor')
         if not cursor:
@@ -58,7 +91,6 @@ def fetch_clawhub():
     return items
 
 def fetch_github_repo(repo):
-    import urllib.parse
     data = fetch(f'https://api.github.com/repos/{repo}')
     if not data or 'full_name' not in data:
         return None
@@ -103,39 +135,27 @@ FEATURED_REPOS = [
 ]
 
 def fetch_all_repos():
-    import urllib.parse
     items = []
     for repo, fallback_desc in FEATURED_REPOS:
         print(f'  fetching {repo}...', file=sys.stderr)
         info = fetch_github_repo(repo)
-        if not info:
-            # use fallback
-            items.append({
-                'id': repo,
-                'name': repo,
-                'slug': repo,
-                'desc': fallback_desc,
-                'stars': 0,
-                'downloads': 0,
-                'version': '',
-                'source': 'github',
-                'install': f'git clone https://github.com/{repo}',
-                'installOfficial': f'git clone https://github.com/{repo}',
-                'url': f'https://github.com/{repo}',
-            })
-            continue
+        desc = (info.get('description') if info else None) or fallback_desc
+        name = (info.get('full_name') if info else None) or repo
+        stars = (info.get('stargazers_count', 0) if info else 0)
+        url = (info.get('html_url') if info else None) or f'https://github.com/{repo}'
         items.append({
             'id': repo,
-            'name': info.get('full_name', repo),
+            'name': name,
             'slug': repo,
-            'desc': info.get('description') or fallback_desc,
-            'stars': info.get('stargazers_count', 0),
+            'desc': desc,
+            'stars': stars,
             'downloads': 0,
             'version': '',
             'source': 'github',
             'install': f'git clone https://github.com/{repo}',
             'installOfficial': f'git clone https://github.com/{repo}',
-            'url': info.get('html_url', f'https://github.com/{repo}'),
+            'url': url,
+            'category': categorize(repo, desc),
         })
         time.sleep(0.2)
     items.sort(key=lambda x: x['stars'], reverse=True)
@@ -143,18 +163,19 @@ def fetch_all_repos():
     return items
 
 def fetch_skillssh():
-    import urllib.parse
     url = 'https://api.github.com/search/repositories?q=skills.sh+agent+skills&sort=stars&per_page=30'
     data = fetch(url)
     if not data:
         return []
     items = []
     for r in (data.get('items') or []):
+        name = r['full_name']
+        desc = r.get('description') or ''
         items.append({
-            'id': 'gh:' + r['full_name'],
-            'name': r['full_name'],
-            'slug': r['full_name'],
-            'desc': r.get('description') or '',
+            'id': 'gh:' + name,
+            'name': name,
+            'slug': name,
+            'desc': desc,
             'stars': r.get('stargazers_count', 0),
             'downloads': 0,
             'version': '',
@@ -162,11 +183,56 @@ def fetch_skillssh():
             'install': f"npx skills add {r['full_name'].split('/')[0]}/{r['name']}@latest --yes",
             'installOfficial': f"npx skills add {r['full_name'].split('/')[0]}/{r['name']}@latest --yes",
             'url': r.get('html_url', ''),
+            'category': categorize(name, desc),
         })
     print(f'  skillssh: {len(items)} items')
     return items
 
-import urllib.parse
+def fetch_local_skills():
+    """Parse skills-catalog.md and return list of locally installed skills."""
+    catalog_path = '/home/void/.openclaw/workspace/memory/skills-catalog.md'
+    items = []
+    try:
+        with open(catalog_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except Exception as e:
+        print(f'  [warn] cannot read skills-catalog.md: {e}', file=sys.stderr)
+        return []
+
+    # Split by skill entries
+    # Format: ## skill: <name>\n<description>
+    pattern = re.compile(r'^## skill:\s*(.+?)$', re.MULTILINE)
+    matches = list(pattern.finditer(content))
+
+    for i, m in enumerate(matches):
+        skill_name = m.group(1).strip()
+        start = m.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(content)
+        desc_block = content[start:end].strip()
+        # Clean up desc: take first non-empty paragraph, limit length
+        desc = desc_block.split('\n\n')[0].replace('\n', ' ').strip()
+        if len(desc) > 300:
+            desc = desc[:297] + '...'
+
+        items.append({
+            'id': 'local:' + skill_name,
+            'name': skill_name,
+            'slug': skill_name,
+            'desc': desc,
+            'stars': 0,
+            'downloads': 0,
+            'version': '',
+            'source': 'local',
+            'install': f'# Already installed at workspace/skills/{skill_name}',
+            'installOfficial': f'clawhub install {skill_name}',
+            'url': f'https://clawhub.ai/skills/{skill_name}',
+            'category': categorize(skill_name, desc),
+        })
+
+    items.sort(key=lambda x: x['name'])
+    print(f'  local skills: {len(items)} items')
+    return items
+
 
 print('Fetching ClawHub...', file=sys.stderr)
 clawhub_data = fetch_clawhub()
@@ -174,17 +240,20 @@ clawhub_data = fetch_clawhub()
 print('Fetching GitHub repos...', file=sys.stderr)
 github_data = fetch_all_repos()
 
-# awesome = github data filtered to awesome/official repos (already in github_data)
-awesome_data = [x for x in github_data]  # same set, sorted by stars
+awesome_data = list(github_data)
 
 print('Fetching skills.sh repos...', file=sys.stderr)
 skillssh_data = fetch_skillssh()
+
+print('Loading local skills...', file=sys.stderr)
+local_data = fetch_local_skills()
 
 payload = {
     'clawhub': clawhub_data,
     'github': github_data,
     'awesome': awesome_data,
     'skillssh': skillssh_data,
+    'local': local_data,
     'builtAt': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
 }
 
@@ -194,7 +263,6 @@ with open('index.html', 'r') as f:
 
 json_str = json.dumps(payload, ensure_ascii=False)
 
-# Replace or inject the STATIC_DATA block
 marker_start = '/* STATIC_DATA_START */'
 marker_end = '/* STATIC_DATA_END */'
 new_block = f'{marker_start}\nconst STATIC_DATA = {json_str};\n{marker_end}'
@@ -210,4 +278,4 @@ else:
 with open('index.html', 'w') as f:
     f.write(html)
 
-print(f'Done. clawhub={len(clawhub_data)}, github={len(github_data)}, skillssh={len(skillssh_data)}')
+print(f'Done. clawhub={len(clawhub_data)}, github={len(github_data)}, skillssh={len(skillssh_data)}, local={len(local_data)}')
