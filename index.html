@@ -46,7 +46,7 @@
     .filter-list { list-style: none; margin-bottom: 20px; }
     .filter-list li button { background: none; border: none; color: var(--muted); font-size: 13px; cursor: pointer; padding: 5px 8px; border-radius: 6px; width: 100%; text-align: left; transition: all 0.15s; display: flex; align-items: center; justify-content: space-between; gap: 4px; }
     .filter-list li button:hover { background: var(--tag-bg); color: var(--text); }
-    .filter-list li button.active { background: var(--tag-bg); color: var(--accent); }
+    .filter-list li button.active { background: rgba(108,99,255,0.15); color: var(--accent); font-weight: 600; border-left: 3px solid var(--accent); padding-left: 5px; }
     .filter-count { font-size: 10px; color: var(--muted); background: var(--bg); border-radius: 8px; padding: 0 5px; }
 
     /* Grid */
@@ -64,7 +64,26 @@
     .src-github   { background: rgba(0,212,170,0.1);   color: #00d4aa; }
     .src-skillssh { background: rgba(255,80,120,0.12); color: #ff7fa8; }
     .src-local    { background: rgba(0,212,170,0.15);  color: #00d4aa; }
-    .cat-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: var(--tag-bg); color: var(--muted); white-space: nowrap; }
+    .cat-badge { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: var(--tag-bg); color: var(--muted); white-space: nowrap; font-weight: 500; }
+    /* category badge colors */
+    .cat-ai      { background: rgba(108,99,255,0.18); color: #b8b3ff; }
+    .cat-agent   { background: rgba(255,180,0,0.15);  color: #ffc940; }
+    .cat-lang    { background: rgba(0,200,130,0.15);  color: #00c882; }
+    .cat-chain   { background: rgba(255,100,50,0.15); color: #ff9070; }
+    .cat-biz     { background: rgba(255,60,130,0.15); color: #ff7fb0; }
+    .cat-know    { background: rgba(60,180,255,0.15); color: #60c8ff; }
+    .cat-life    { background: rgba(80,220,120,0.15); color: #60dd90; }
+    .cat-fe      { background: rgba(255,150,50,0.15); color: #ffaa60; }
+    .cat-python  { background: rgba(60,160,255,0.15); color: #60b8ff; }
+    .cat-backend { background: rgba(180,80,255,0.15); color: #d090ff; }
+    .cat-devops  { background: rgba(0,212,170,0.15);  color: #00d4aa; }
+    .cat-sec     { background: rgba(255,60,60,0.15);  color: #ff7070; }
+    .cat-content { background: rgba(255,200,60,0.15); color: #ffd060; }
+    .cat-tools   { background: rgba(140,140,140,0.2); color: #c0c0c0; }
+    .cat-mobile  { background: rgba(100,220,200,0.15);color: #60ddc0; }
+    .cat-arch    { background: rgba(200,100,255,0.15);color: #d070ff; }
+    .cat-claw    { background: rgba(0,212,170,0.2);   color: #00e8bb; }
+    .cat-other   { background: var(--tag-bg);          color: var(--muted); }
     .card-summary { font-size: 12px; color: var(--muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .card-footer { display: flex; align-items: center; gap: 8px; margin-top: auto; flex-wrap: wrap; }
     .card-slug { font-size: 11px; color: var(--accent2); font-family: monospace; background: rgba(0,212,170,0.08); padding: 2px 7px; border-radius: 4px; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -184,6 +203,28 @@ function fuzzyMatch(str, query) {
   return true;
 }
 
+const CAT_CLASS_MAP = {
+  '🤖 AI/ML':        'cat-ai',
+  '🧩 Agent模式':    'cat-agent',
+  '💻 编程语言/框架': 'cat-lang',
+  '⛓ 区块链/Web3':   'cat-chain',
+  '📊 产品/商业':     'cat-biz',
+  '📚 知识/学科':     'cat-know',
+  '🌿 生活方式':      'cat-life',
+  '🎨 前端':         'cat-fe',
+  '🐍 Python':       'cat-python',
+  '⚙️ 后端/数据库':  'cat-backend',
+  '🚀 DevOps':       'cat-devops',
+  '🔒 安全':         'cat-sec',
+  '📝 内容创作':      'cat-content',
+  '🛠 工具':         'cat-tools',
+  '📱 移动端':        'cat-mobile',
+  '🏗 架构':          'cat-arch',
+  '🐾 OpenClaw':     'cat-claw',
+  '📦 其他':         'cat-other',
+};
+function catClass(cat) { return CAT_CLASS_MAP[cat] || 'cat-other'; }
+
 function getItems() {
   const raw = (STATIC_DATA[curSrc] || []).slice();
   const q = search.trim();
@@ -242,7 +283,7 @@ function render() {
           <span class="source-pill ${m.pill}">${m.label}</span>
         </div>
       </div>
-      ${s.category ? `<div><span class="cat-badge">${esc(s.category)}</span></div>` : ''}
+      ${s.category ? `<div><span class="cat-badge ${catClass(s.category)}">${esc(s.category)}</span></div>` : ''}
       <div class="card-summary">${esc(s.desc)}</div>
       <div class="card-footer">
         <span class="card-slug" title="${esc(s.slug)}">${esc(s.slug)}</span>
@@ -283,7 +324,7 @@ function showDetail(s) {
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
       <h2 style="flex:1">${s.source==='local'?'✅ ':''}${esc(s.name)}</h2>
       <span class="source-pill ${m.pill}">${m.label}</span>
-      ${s.category ? `<span class="cat-badge">${esc(s.category)}</span>` : ''}
+      ${s.category ? `<span class="cat-badge ${catClass(s.category)}">${esc(s.category)}</span>` : ''}
     </div>
     <div class="slug">${esc(s.slug)}</div>
     <div class="desc">${esc(s.desc)}</div>

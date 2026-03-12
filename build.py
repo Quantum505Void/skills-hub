@@ -71,10 +71,15 @@ CATEGORY_RULES = [
                          'clawhub', 'oracle', 'healthcheck', 'session-logs']),
 ]
 
+# Keywords that should ONLY match name/slug (not description) to avoid false positives
+NAME_ONLY_KEYWORDS = {'ai-', 'ai_', 'token', 'node', 'rest', 'auth', 'law', 'rust', 'cli'}
+
 def categorize(name, desc):
-    text = (name + ' ' + desc).lower()
+    name_text = name.lower()
+    full_text = (name + ' ' + desc).lower()
     for cat, keywords in CATEGORY_RULES:
         for kw in keywords:
+            text = name_text if kw in NAME_ONLY_KEYWORDS else full_text
             if kw in text:
                 return cat
     return '📦 其他'
