@@ -20,7 +20,7 @@ jobs:
 
       - name: Fetch data & inject into HTML
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SKILLS_HUB_TOKEN }}
         run: python3 build.py
 
       - name: Deploy to gh-pages
