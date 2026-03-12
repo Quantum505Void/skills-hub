@@ -245,15 +245,11 @@ awesome_data = list(github_data)
 print('Fetching skills.sh repos...', file=sys.stderr)
 skillssh_data = fetch_skillssh()
 
-print('Loading local skills...', file=sys.stderr)
-local_data = fetch_local_skills()
-
 payload = {
     'clawhub': clawhub_data,
     'github': github_data,
     'awesome': awesome_data,
     'skillssh': skillssh_data,
-    'local': local_data,
     'builtAt': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
 }
 
@@ -291,4 +287,4 @@ else:
 with open('index.html', 'w') as f:
     f.write(html)
 
-print(f'Done. clawhub={len(clawhub_data)}, github={len(github_data)}, skillssh={len(skillssh_data)}, local={len(local_data)}')
+print(f'Done. clawhub={len(clawhub_data)}, github={len(github_data)}, skillssh={len(skillssh_data)}')
