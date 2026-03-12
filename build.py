@@ -261,7 +261,8 @@ payload = {
 with open('index.html', 'r') as f:
     html = f.read()
 
-json_str = json.dumps(payload, ensure_ascii=False)
+# Escape </script> to prevent HTML parser from closing the script tag early
+json_str = json.dumps(payload, ensure_ascii=False).replace('</script>', '<\\/script>').replace('<!--', '<\\!--')
 
 marker_start = '/* STATIC_DATA_START */'
 marker_end = '/* STATIC_DATA_END */'
