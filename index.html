@@ -23,6 +23,8 @@
     .search-wrap input:focus { border-color: var(--accent); }
     .search-wrap .si { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 14px; }
     .search-shortcut { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: var(--tag-bg); border-radius: 4px; padding: 1px 5px; font-size: 10px; color: var(--muted); pointer-events: none; }
+    .search-clear { position: absolute; right: 32px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; padding: 2px 4px; border-radius: 4px; transition: color 0.15s; }
+    .search-clear:hover { color: var(--text); }
     .hdr-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
     .stats-badge { color: var(--muted); font-size: 13px; white-space: nowrap; }
     .built-at { color: var(--muted); font-size: 11px; white-space: nowrap; }
@@ -91,6 +93,16 @@
     .card-dl { margin-left: auto; font-size: 11px; color: var(--muted); }
     .no-results { grid-column: 1/-1; text-align: center; color: var(--muted); padding: 60px; font-size: 14px; }
 
+    /* Skeleton shimmer */
+    @keyframes shimmer { 0%{background-position:-600px 0} 100%{background-position:600px 0} }
+    .skeleton { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .skel-line { border-radius: 4px; background: linear-gradient(90deg, var(--surface) 25%, var(--tag-bg) 50%, var(--surface) 75%); background-size: 600px 100%; animation: shimmer 1.4s infinite linear; }
+    .skel-h { height: 16px; width: 60%; }
+    .skel-badge { height: 20px; width: 80px; }
+    .skel-p { height: 11px; width: 100%; }
+    .skel-p2 { height: 11px; width: 80%; }
+    .skel-p3 { height: 11px; width: 90%; }
+
     /* Modal */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
     .modal-overlay.open { display: flex; }
@@ -133,6 +145,7 @@
   <div class="search-wrap">
     <span class="si">🔍</span>
     <input type="text" id="search" placeholder="搜索 skill… (⌘K)" autocomplete="off" />
+    <button class="search-clear" id="searchClear" style="display:none" onclick="clearSearch()" title="清除">✕</button>
     <span class="search-shortcut" id="shortcutHint">⌘K</span>
   </div>
   <div class="hdr-right">
@@ -263,9 +276,12 @@ function render() {
   const items = getItems();
   const total = (STATIC_DATA[curSrc] || []).length;
   const grid = document.getElementById('grid');
-  document.getElementById('statsText').textContent = `${items.length} / ${total} skills`;
+  const statsEl = document.getElementById('statsText');
+  statsEl.dataset.total = total;
+  animateCount(statsEl, items.length);
 
   if (!items.length) {
+    statsEl.textContent = `0 / ${total} skills`;
     grid.innerHTML = `<div class="no-results">没有找到相关 skill 🤔</div>`;
     return;
   }
@@ -371,6 +387,29 @@ async function copyText(text, btn) {
 function fmt(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n); }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+function clearSearch() {
+  document.getElementById('search').value = '';
+  search = '';
+  document.getElementById('searchClear').style.display = 'none';
+  document.getElementById('shortcutHint').style.display = '';
+  render();
+}
+
+let _countUpTimer = null;
+function animateCount(el, target) {
+  const start = parseInt(el.textContent) || 0;
+  if (start === target) return;
+  const dur = 400, step = 16;
+  let cur = start, t0 = performance.now();
+  clearInterval(_countUpTimer);
+  _countUpTimer = setInterval(() => {
+    const prog = Math.min(1, (performance.now()-t0)/dur);
+    cur = Math.round(start + (target-start) * prog);
+    el.textContent = cur + ' / ' + (parseInt(el.dataset.total)||target) + ' skills';
+    if (prog >= 1) clearInterval(_countUpTimer);
+  }, step);
+}
+
 function switchTab(src) {
   curSrc = src; curCat = 'all';
   document.querySelectorAll('[data-src]').forEach(b => b.classList.toggle('active', b.dataset.src === src));
@@ -401,6 +440,9 @@ function init() {
 // Events
 document.getElementById('search').addEventListener('input', e => {
   search = e.target.value;
+  const hasVal = search.length > 0;
+  document.getElementById('searchClear').style.display = hasVal ? '' : 'none';
+  document.getElementById('shortcutHint').style.display = hasVal ? 'none' : '';
   clearTimeout(searchTimer);
   searchTimer = setTimeout(render, 180);
 });
